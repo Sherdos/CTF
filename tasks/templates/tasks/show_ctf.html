@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ctf.title}}</title>
+</head>
+<body>
+    <h1>{{ctf.title}}</h1>
+    <p>
+        {{ctf.description}}
+    </p>
+
+    
+    {% for task in ctf.tasks.all %}
+        <div class="task" style="border: 1px red solid; padding: 10px;">
+            <h3>
+                {{task.title}}
+            </h3>
+            <p>{{task.description}}</p>
+            
+            {% if task.id in task_ids %}
+                <p>Submited</p>
+            {% else %}
+                <form action="{% url 'check_answer' task.id %}" method="post">
+                    {% csrf_token %}
+                    <label for="">Flag</label>
+                    <input name="flag" type="text">
+                    <button>Submit</button>
+                </form>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+</body>
+</html>
