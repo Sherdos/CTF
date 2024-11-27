@@ -1,19 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
-</head>
-<body>
-    <h1>CTFS</h1>
-    <br>
-    {% for ctf in ctfs %}
-        <div class="ctf">
-            <a href="{{ctf.get_absolute_url}}"><h3>{{ctf.title}}</h3></a>
-            <p>{{ctf.description}}</p>
+{% extends 'tasks/base.html' %}
+
+
+{% block content %}
+    <div class="container my-4">
+        <h1 class="text-center mb-4">CTFs</h1>
+        <div class="row g-4">
+            {% for ctf in ctfs %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <a href="{{ ctf.get_absolute_url }}" class="text-decoration-none">
+                                <h3 class="card-title">{{ ctf.title }}</h3>
+                            </a>
+                            <p class="card-text">{{ ctf.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %} 
         </div>
-    {% endfor %}
+    </div>
+{% endblock content %}
+    
+    
         
-</body>
-</html>

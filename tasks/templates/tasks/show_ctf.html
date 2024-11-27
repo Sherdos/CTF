@@ -1,36 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ctf.title}}</title>
-</head>
-<body>
-    <h1>{{ctf.title}}</h1>
-    <p>
-        {{ctf.description}}
-    </p>
+{% extends 'tasks/base.html' %}
 
-    
-    {% for task in ctf.tasks.all %}
-        <div class="task" style="border: 1px red solid; padding: 10px;">
-            <h3>
-                {{task.title}}
-            </h3>
-            <p>{{task.description}}</p>
-            
-            {% if task.id in task_ids %}
-                <p>Submited</p>
-            {% else %}
-                <form action="{% url 'check_answer' task.id %}" method="post">
-                    {% csrf_token %}
-                    <label for="">Flag</label>
-                    <input name="flag" type="text">
-                    <button>Submit</button>
-                </form>
-            {% endif %}
+
+{% block content %}    
+    <div class="container my-4">
+        <h1 class="text-center mb-4">{{ ctf.title }}</h1>
+        <p class="lead">{{ ctf.description }}</p>
+
+        <div class="row g-4">
+            {% for task in ctf.tasks.all %}
+                <div class="col-12">
+                    <div class="card ">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ task.title }}</h3>
+                            <p class="card-text">{{ task.description }}</p>
+
+                            {% if task.id in task_ids %}
+                                <p class="text-success fw-bold">Submitted</p>
+                            {% else %}
+                                <form action="{% url 'check_answer' task.id %}" method="post" class="mt-3">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label for="flag-{{ task.id }}" class="form-label">Flag</label>
+                                        <input name="flag" id="flag-{{ task.id }}" type="text" class="form-control" placeholder="Enter flag here">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
+    </div>
 
-</body>
-</html>
+{% endblock content %}

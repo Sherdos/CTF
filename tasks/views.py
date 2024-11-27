@@ -29,4 +29,4 @@ def check_answer(request, id):
         if flag == task.flag:
             Answer.objects.create(user = request.user, task = task)
         
-    return redirect('show_ctf', id)
+    return redirect('show_ctf', task.ctf_id)
