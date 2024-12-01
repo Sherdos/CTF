@@ -1,24 +1,20 @@
 {% extends 'tasks/base.html' %}
-
+{% load static %}
 
 {% block content %}
-    <div class="container my-4">
-        <h1 class="text-center mb-4">CTFs</h1>
-        <div class="row g-4">
-            {% for ctf in ctfs %}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <a href="{{ ctf.get_absolute_url }}" class="text-decoration-none">
-                                <h3 class="card-title">{{ ctf.title }}</h3>
-                            </a>
-                            <p class="card-text">{{ ctf.description }}</p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %} 
-        </div>
+
+<div class="banner d-flex align-items-center">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">Welcome to Ala-Too CTFs</h1>
+        <p class="lead">Discover exciting challenges and improve your skills!</p>
     </div>
+
+</div>
+
+
+
+{% include 'components/ctfs.html' %}
+
 {% endblock content %}
     
     

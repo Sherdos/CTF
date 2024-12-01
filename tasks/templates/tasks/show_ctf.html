@@ -1,19 +1,18 @@
 {% extends 'tasks/base.html' %}
 
-
 {% block content %}    
     <div class="container my-4">
-        <h1 class="text-center mb-4">{{ ctf.title }}</h1>
+        <h1 class="text-center mb-4" style="padding: 10px;">{{ ctf.title|title }}</h1>
         <p class="lead">{{ ctf.description }}</p>
 
         <div class="row g-4">
             {% for task in ctf.tasks.all %}
                 <div class="col-12">
-                    <div class="card ">
+                    <div class="card bg-dark text-light ">
                         <div class="card-body">
                             <h3 class="card-title">{{ task.title }}</h3>
                             <p class="card-text">{{ task.description }}</p>
-
+        
                             {% if task.id in task_ids %}
                                 <p class="text-success fw-bold">Submitted</p>
                             {% else %}
@@ -21,7 +20,7 @@
                                     {% csrf_token %}
                                     <div class="mb-3">
                                         <label for="flag-{{ task.id }}" class="form-label">Flag</label>
-                                        <input name="flag" id="flag-{{ task.id }}" type="text" class="form-control" placeholder="Enter flag here">
+                                        <input name="flag" id="flag-{{ task.id }}" type="text" class="form-control bg-dark text-light " placeholder="Enter flag here">
                                     </div>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
@@ -31,6 +30,7 @@
                 </div>
             {% endfor %}
         </div>
+        
     </div>
 
 {% endblock content %}

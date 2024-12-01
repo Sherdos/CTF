@@ -1,13 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 
 # Create your models here.
 
 
-class User(AbstractUser):
-    
-    machine = models.ForeignKey('tasks.Machine', on_delete=models.CASCADE, verbose_name='Машина', related_name='users', null=True)
 
 
 
@@ -69,7 +65,7 @@ class Task(models.Model):
 class Answer(models.Model):
     """Model definition for Answer."""
 
-    user = models.ForeignKey('tasks.User', on_delete=models.CASCADE, verbose_name='пользователь', related_name='answers')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='пользователь', related_name='answers')
     task = models.ForeignKey('tasks.Task', on_delete=models.CASCADE, verbose_name='задание', related_name='tasks')
     status = models.BooleanField(verbose_name='статус', default=False)
     

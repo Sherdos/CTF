@@ -1,0 +1,27 @@
+<div class="container my-4">
+    <h1 class="text-center mb-4 ">CTFs</h1>
+    {% if ctfs %}
+        <div class="row g-4">
+            {% for ctf in ctfs %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm bg-dark rounded-3">
+                        <div class="card-body">
+                            <a href="{{ ctf.get_absolute_url }}" class="text-decoration-none">
+                                <h3 class="card-title text-light text-center">{{ ctf.title|title }}</h3>
+                            </a>
+                            <br>
+                            <p class="card-text text-light">{{ ctf.description }}</p>
+                        </div>
+                        <div class="card-footer text-end">
+                            <small class="text-muted "><p class="text-light">Last updated {{ ctf.updated_at|date:"d M Y" }}</p></small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-secondary text-center text-light bg-dark border-light" role="alert">
+            No CTFs available at the moment.
+        </div>
+    {% endif %}
+</div>
