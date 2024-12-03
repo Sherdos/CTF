@@ -12,6 +12,11 @@
                         <div class="card-body">
                             <h3 class="card-title">{{ task.title }}</h3>
                             <p class="card-text">{{ task.description }}</p>
+                            
+                            {% if task.file %}
+                                <a href="{{ task.file.url }}">Download File</a>
+                            {% endif %}
+                                
         
                             {% if task.id in task_ids %}
                                 <p class="text-success fw-bold">Submitted</p>

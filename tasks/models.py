@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.urls import reverse
 
@@ -41,14 +42,19 @@ class Ctf(models.Model):
         return reverse('show_ctf', kwargs={'id': self.pk})
 
 
+
+def get_upload_to(instance, filename):
+    folder_name = instance.title.replace(' ', '_') 
+    return os.path.join('tasks', folder_name, filename)
+    
 class Task(models.Model):
     """Model definition for Task."""
-
     
     title = models.CharField(verbose_name='название', max_length=255)
     description = models.TextField(verbose_name='описание', null=True, blank=True)
     flag = models.CharField(verbose_name='ответ', max_length=255)
     floor = models.SmallIntegerField(verbose_name='этаж')
+    file = models.FileField(verbose_name='файл', upload_to=get_upload_to, null=True, blank=True)
     
     ctf = models.ForeignKey('tasks.Ctf', on_delete=models.CASCADE, verbose_name='ctf', related_name='tasks')
 
