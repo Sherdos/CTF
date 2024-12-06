@@ -5,13 +5,27 @@ from django.urls import reverse
 # Create your models here.
 
 
+class Setting(models.Model):
+    
+    file_name = models.CharField(max_length=255)
+    active_ctf = models.ForeignKey('tasks.Ctf', on_delete=models.CASCADE, null=True, blank=True)
+    
+    class Meta:
+        """Meta definition for Machine."""
 
+        verbose_name = 'Setting'
+        verbose_name_plural = 'Settings'
 
+    def __str__(self):
+        return f'Setting'
 
 class Machine(models.Model):
     """Model definition for Machine."""
 
-    title = models.CharField(verbose_name='название', max_length=255)
+    title = models.CharField(max_length=255)
+    hostname = models.CharField( max_length=255)
+    password = models.CharField( max_length=255)
+    username = models.CharField( max_length=255)
 
     class Meta:
         """Meta definition for Machine."""
@@ -26,8 +40,8 @@ class Machine(models.Model):
 class Ctf(models.Model):
     """Model definition for Ctf."""
 
-    title = models.CharField(verbose_name='название', max_length=255)
-    description = models.TextField(verbose_name='описание', null=True, blank=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
 
     class Meta:
         """Meta definition for Ctf."""
@@ -50,11 +64,11 @@ def get_upload_to(instance, filename):
 class Task(models.Model):
     """Model definition for Task."""
     
-    title = models.CharField(verbose_name='название', max_length=255)
-    description = models.TextField(verbose_name='описание', null=True, blank=True)
-    flag = models.CharField(verbose_name='ответ', max_length=255)
-    floor = models.SmallIntegerField(verbose_name='этаж')
-    file = models.FileField(verbose_name='файл', upload_to=get_upload_to, null=True, blank=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    flag = models.CharField(max_length=255)
+    floor = models.SmallIntegerField()
+    file = models.FileField(upload_to=get_upload_to, null=True, blank=True)
     
     ctf = models.ForeignKey('tasks.Ctf', on_delete=models.CASCADE, verbose_name='ctf', related_name='tasks')
 
@@ -71,8 +85,8 @@ class Task(models.Model):
 class Answer(models.Model):
     """Model definition for Answer."""
 
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='пользователь', related_name='answers')
-    task = models.ForeignKey('tasks.Task', on_delete=models.CASCADE, verbose_name='задание', related_name='tasks')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='answers')
+    task = models.ForeignKey('tasks.Task', on_delete=models.CASCADE, related_name='tasks')
     status = models.BooleanField(verbose_name='статус', default=False)
     
     class Meta:
