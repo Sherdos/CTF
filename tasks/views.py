@@ -15,7 +15,10 @@ def index(request):
 def show_ctf(request, id):
     template_name = 'tasks/show_ctf.html'
     ctf = Ctf.objects.get(id=id)
-    task_ids = request.user.answers.values_list('task_id', flat=True)
+    task_ids = []
+    if request.user.is_authenticated:
+        task_ids = request.user.answers.values_list('task_id', flat=True)
+    
     context = {
         'ctf':ctf,
         'task_ids':task_ids

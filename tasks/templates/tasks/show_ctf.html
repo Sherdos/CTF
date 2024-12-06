@@ -12,23 +12,25 @@
                         <div class="card-body">
                             <h3 class="card-title">{{ task.title }}</h3>
                             <p class="card-text">{{ task.description }}</p>
-                            
-                            
-                            
-                            {% if task.id in task_ids %}
-                            <p class="text-success fw-bold">Submitted</p>
-                            {% else %}
-                                {% if task.file %}
-                                    <a href="{{ task.file.url }}">Download File</a>
+                            {% if task.file %}
+                                <a href="{{ task.file.url }}">Download File</a>
+                            {% endif %}
+
+                            {% if request.user.is_authenticated %}
+                                {% if task.id in task_ids %}
+                                    <p class="text-success fw-bold">Submitted</p>
+                                {% else %}
+                                    <form action="{% url 'check_answer' task.id %}" method="post" class="mt-3">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="flag-{{ task.id }}" class="form-label">Flag</label>
+                                            <input name="flag" id="flag-{{ task.id }}" type="text" class="form-control bg-dark text-light " placeholder="Enter flag here">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
                                 {% endif %}
-                                <form action="{% url 'check_answer' task.id %}" method="post" class="mt-3">
-                                    {% csrf_token %}
-                                    <div class="mb-3">
-                                        <label for="flag-{{ task.id }}" class="form-label">Flag</label>
-                                        <input name="flag" id="flag-{{ task.id }}" type="text" class="form-control bg-dark text-light " placeholder="Enter flag here">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
+                            {% else %}
+                            <p class="text-danger fw-bold">Login to solve tasks</p>
                             {% endif %}
                         </div>
                     </div>
