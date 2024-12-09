@@ -7,6 +7,7 @@ db.sqlite3
 media/
 coolsite_cache
 api
+k
 
 # Backup files #
 *.bak
