@@ -7,7 +7,7 @@ from django.urls import reverse
 
 class Setting(models.Model):
     
-    file_name = models.CharField(max_length=255)
+    
     active_ctf = models.ForeignKey('tasks.Ctf', on_delete=models.CASCADE, null=True, blank=True)
     
     class Meta:
@@ -23,9 +23,6 @@ class Machine(models.Model):
     """Model definition for Machine."""
 
     title = models.CharField(max_length=255)
-    hostname = models.CharField( max_length=255)
-    password = models.CharField( max_length=255)
-    username = models.CharField( max_length=255)
 
     class Meta:
         """Meta definition for Machine."""
