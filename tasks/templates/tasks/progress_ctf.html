@@ -1,0 +1,149 @@
+{% extends 'tasks/base.html' %}
+{% load static %}
+{% block content %} 
+<style>
+    #progress .card {
+        width: 18rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #progress .card:hover {
+        transform: scale(1.05);
+    }
+
+    #alerts-container .alert {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1050;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Оверлей */
+    #first-blood-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    #first-blood-overlay .overlay-content {
+        text-align: center;
+        animation: pulse 1s infinite;
+    }
+
+    #first-blood-overlay h1 {
+        font-size: 5rem;
+        font-weight: bold;
+        text-shadow: 0 0 20px #dc3545, 0 0 30px #dc3545;
+    }
+
+    #first-blood-overlay p {
+        font-size: 2rem;
+    }
+
+    /* Анимация пульсации текста */
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    </style>
+
+
+<div class="container mt-4">
+    <div id="alerts-container"></div>
+
+    <div class="container mt-4">
+        <h2 class="mb-4">User Progress</h2>
+        <div id="progress" class="d-flex flex-wrap gap-3">
+        {% for answer in answers %}
+            <div id="progress" class="d-flex flex-wrap gap-3">
+                <div class="card-header"><strong>{{answer.user.username}}</strong></div>
+                <div class="card-body">
+                    <h5 class="card-title">Solved: {{answer.task.title}}</h5>
+                    <p class="card-text">Keep going! You're doing great!</p>
+                </div>
+            </div>
+    {% endfor %}
+    
+
+    <!-- Контейнер для уведомлений -->
+            <!-- Здесь будут появляться карточки прогресса -->
+        </div>
+    </div>
+</div>
+
+
+<script>
+    const ctfId = "{{ ctf.id }}";
+    const ws = new WebSocket(`ws://${window.location.host}/ws/ctf/${ctfId}/`);
+
+    ws.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        const message = data.message;
+
+        if (message.type === "first_blood") {
+            // Запускаем fullscreen-оверлей
+            showFirstBloodOverlay(message.user, message.task_title);
+        } 
+            // Добавляем прогресс в контейнер
+        const progressContainer = document.getElementById("progress");
+        const card = document.createElement("div");
+        card.className = "card bg-light mb-3";
+        card.style.maxWidth = "18rem";
+        card.innerHTML = `
+            <div class="card-header"><strong>${message.user}</strong></div>
+            <div class="card-body">
+                <h5 class="card-title">Solved: ${message.task_title}</h5>
+                <p class="card-text">Keep going! You're doing great!</p>
+            </div>
+        `;
+        progressContainer.appendChild(card);
+        
+    };
+
+    function showFirstBloodOverlay(user, taskTitle) {
+        const overlay = document.createElement("div");
+        overlay.id = "first-blood-overlay";
+        overlay.innerHTML = `
+            <div class="overlay-content">
+                <h1>FIRST BLOOD</h1>
+                <p>${user} solved <strong>${taskTitle}</strong></p>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        // Воспроизведение звука
+        const audio = new Audio("{% static 'tasks/first_blood.mp3' %}");
+        audio.play().catch(error => console.log("Audio play failed:", error));
+
+        // Автоматическое удаление оверлея через 5 секунд
+        setTimeout(() => {
+            overlay.style.opacity = 0; // Анимация исчезновения
+            setTimeout(() => overlay.remove(), 500); // Удаление из DOM
+        }, 5000);
+    }
+</script>
+{% endblock content %}

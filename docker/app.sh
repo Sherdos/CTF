@@ -3,6 +3,7 @@
 # Применяем миграции
 python manage.py makemigrations
 python manage.py migrate
+python manage.py collectstatic
 
 # Создаем суперпользователя
 python manage.py shell <<EOF
@@ -19,4 +20,4 @@ else:
 EOF
 
 # Запускаем сервер
-python manage.py runserver 0.0.0.0:8000
+uvicorn CTF.asgi:application --host 0.0.0.0 --port 8000 --reload

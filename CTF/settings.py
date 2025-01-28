@@ -25,7 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tasks.apps.TasksConfig',
     'users.apps.UsersConfig',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -73,27 +75,35 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CTF.wsgi.application'
 
+ASGI_APPLICATION = 'CTF.asgi.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('DB_NAME'),
-#         'USER': os.getenv('DB_USER'),
-#         'PASSWORD': os.getenv('DB_PASS'),
-#         'HOST': os.getenv('DB_HOST'),  
-#         'PORT': os.getenv('DB_PORT'),    
-#     }
-# }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASS'),
+            'HOST': os.getenv('DB_HOST'),  
+            'PORT': os.getenv('DB_PORT'),    
+        }
+    }
+print("DB_NAME:", os.getenv('DB_NAME'))
+print("DB_USER:", os.getenv('DB_USER'))
 
 
 
@@ -132,8 +142,16 @@ USE_I18N = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# URL для доступа к статическим файлам
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# Места, где Django ищет статические файлы
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "tasks/static"),  # Укажите папку вашего приложения
+]
+
+# URL, по которому будут доступны статические файлы
+STATIC_URL = "/static/"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
