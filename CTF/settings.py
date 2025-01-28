@@ -84,27 +84,24 @@ CHANNEL_LAYERS = {
 }
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+# if DEBUG:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASS'),
+        'HOST': os.getenv('DB_HOST'),  
+        'PORT': os.getenv('DB_PORT'),    
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASS'),
-            'HOST': os.getenv('DB_HOST'),  
-            'PORT': os.getenv('DB_PORT'),    
-        }
-    }
-print("DB_NAME:", os.getenv('DB_NAME'))
-print("DB_USER:", os.getenv('DB_USER'))
-
+}
 
 
 
@@ -136,25 +133,26 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-# USE_TZ = True
+USE_TZ = True
 
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 # URL для доступа к статическим файлам
+STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+print(BASE_DIR)
 
 # Места, где Django ищет статические файлы
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "tasks/static"),  # Укажите папку вашего приложения
+    os.path.join(BASE_DIR, "staticfiles"),  # Укажите папку вашего приложения
 ]
 
 # URL, по которому будут доступны статические файлы
-STATIC_URL = "/static/"
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
