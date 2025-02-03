@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, redirect
 
 def index(request):
     template_name = 'tasks/index.html'
-    ctfs = Ctf.objects.all()
+    ctfs = Ctf.objects.filter(is_active=True)
     context = {
         'ctfs':ctfs,
     }
